@@ -32,11 +32,9 @@ router.get('/suggestions', async (ctx, next) => {
 
   let suggestions = null;
   try {
-    const songData = (await axios.post('http://localhost:5000/track', { tracks: [spotifyID] })).data.tracks[0];
-    console.log('songData', songData);
+    const songData = (await axios.post('/track', { tracks: [spotifyID] })).data.tracks[0];
     const suggestionIDs = (await axios.post(`${process.env.PYTHON_API_URI}/suggestions?number=${number}`, songData)).data;
-    console.log('suggestionIDs', suggestionIDs);
-    suggestions = (await axios.post('http://localhost:5000/track', { tracks: suggestionIDs })).data.tracks;
+    suggestions = (await axios.post('/track', { tracks: suggestionIDs })).data.tracks;
   } catch (error) {
     ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
     ctx.body = error;
